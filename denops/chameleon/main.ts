@@ -53,7 +53,7 @@ async function apply(denops: Denops) {
   signal?.throwIfAborted();
   if (await denops.eval("&background") !== background) {
     await denops.cmd(`set background=${background}`);
-    await emit(denops, "User", `HydeBackgroundChanged:${background}`, {
+    await emit(denops, "User", `ChameleonBackgroundChanged:${background}`, {
       nomodeline: true,
     });
   }
