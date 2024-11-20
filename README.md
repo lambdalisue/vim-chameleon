@@ -59,8 +59,8 @@ the `colorscheme`:
 ```vim
 augroup chameleon
   autocmd!
-  autocmd User ChameleonBackgroundChanged:light colorscheme dawnfox
-  autocmd User ChameleonBackgroundChanged:dark colorscheme nordfox
+  autocmd User ChameleonBackgroundChanged:light ++nested colorscheme dawnfox
+  autocmd User ChameleonBackgroundChanged:dark ++nested colorscheme nordfox
 augroup END
 ```
 
