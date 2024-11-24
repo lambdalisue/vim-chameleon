@@ -10,6 +10,9 @@ function getChecker(): (
       return checkDarkmodeDarwin;
     }
     case "linux": {
+      if (Deno.env.has("WSL_DISTRO_NAME")) {
+        return checkDarkmodeWindows;
+      }
       return checkDarkmodeLinux;
     }
     case "windows": {
