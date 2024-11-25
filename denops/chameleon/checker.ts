@@ -10,6 +10,9 @@ function getChecker(): (
       return checkDarkmodeDarwin;
     }
     case "linux": {
+      if (Deno.env.has("WSL_DISTRO_NAME")) {
+        return checkDarkmodeWindows;
+      }
       return checkDarkmodeLinux;
     }
     case "windows": {
@@ -48,10 +51,23 @@ function checkDarkmodeLinux(
   return Promise.resolve("dark");
 }
 
-function checkDarkmodeWindows(
-  _options: { signal?: AbortSignal },
+async function checkDarkmodeWindows(
+  { signal }: { signal?: AbortSignal },
 ): Promise<Background> {
-  console.warn(`Windows is not supported yet. PR is welcome!`);
+  const cmd = new Deno.Command("powershell.exe", {
+    args: [
+      "-command",
+      '$regValue = Get-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" -Name "AppsUseLightTheme"; Write-Output $regValue.AppsUseLightTheme',
+    ],
+    stdin: "null",
+    stdout: "piped",
+    stderr: "null",
+    signal,
+  });
+  const { success, stdout } = await cmd.output();
+  if (success) {
+    return decoder.decode(stdout).trim() === "0" ? "dark" : "light";
+  }
   return Promise.resolve("dark");
 }
 
